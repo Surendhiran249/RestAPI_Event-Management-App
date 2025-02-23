@@ -17,8 +17,8 @@ public class TaskController {
     private TaskService taskService;
 
     @PostMapping("/create/{eventId}/{userId}")
-    public Task createTask(@RequestParam String taskName, @PathVariable Long eventId, @PathVariable Long userId) {
-        return taskService.createTask(taskName, eventId, userId);
+    public Task createTask(@RequestBody Task task, @PathVariable Long eventId, @PathVariable Long userId) {
+        return taskService.createTask(task.getTaskName(), eventId, userId);
     }
 
     @GetMapping("/event/{eventId}")
@@ -45,5 +45,10 @@ public class TaskController {
     public Page<Task> getTasksByUser(@PathVariable Long userId,@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "5")int size) {
         Pageable pageable = PageRequest.of(page,size);
         return taskService.getTasksByUser(userId, pageable);
+    }
+
+    @GetMapping("/sorted")
+    public List<Task> getTasksSorted(@RequestParam String field, @RequestParam String direction) {
+        return taskService.getTasksSorted(field, direction);
     }
 }

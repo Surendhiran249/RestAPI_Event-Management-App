@@ -62,4 +62,9 @@ public class BookingController {
         Pageable pageable = PageRequest.of(page,size);
         return bookingService.getBookingsByEvent(eventId, pageable);
     }
+
+    @GetMapping("/sorted")
+    public List<Booking> getBookingsSorted(@RequestParam String field, @RequestParam String direction) {
+        return bookingService.getBookingsSorted(field, direction);
+    }
 }

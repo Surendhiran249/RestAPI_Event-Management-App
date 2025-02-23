@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import event_management.demo.entity.Event;
@@ -19,6 +20,10 @@ public class EventService {
     // Create or Update an Event
     public Event saveEvent(Event event) {
         return eventRepo.save(event);
+    }
+
+    public List<Event> saveEvents(List<Event> events) {
+        return eventRepo.saveAll(events);
     }
 
     //Get All Events
@@ -53,5 +58,14 @@ public class EventService {
     // Get all events paginated
     public Page<Event> getEventsPaginated(Pageable pageable) {
         return eventRepo.findAll(pageable);
+    }
+
+    public List<Event> getEventsSorted(String field, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(field).ascending() : Sort.by(field).descending();
+        return eventRepo.findAll(sort);
+    }
+
+    public List<Event> searchEvents(String keyword) {
+        return eventRepo.searchEvents(keyword);
     }
 }

@@ -2,7 +2,7 @@ package event_management.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+// import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -21,6 +21,12 @@ public class UserController {
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
+
+    @PostMapping("/createbatch")
+    public List<User> saveUsers(@RequestBody List<User> users) {
+        return userService.saveUsers(users);
+    }
+
 
     // Get all users
     @GetMapping("/all")
@@ -53,8 +59,17 @@ public class UserController {
     }
 
     @GetMapping("/userspage")
-    public Page<User> getUsersPaginated(@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "5")int size) {
-        Pageable pageable = PageRequest.of(page,size);
+    public Page<User> getUsersPaginated(Pageable pageable) {
         return userService.getUsersPaginated(pageable);
+    }
+
+    @GetMapping("/sorted")
+    public List<User> getUsersSorted(@RequestParam String field, @RequestParam String direction) {
+        return userService.getUsersSorted(field, direction);
+    }
+
+    @GetMapping("/search")
+    public List<User> searchUsers(@RequestParam String keyword) {
+        return userService.searchUsers(keyword);
     }
 }

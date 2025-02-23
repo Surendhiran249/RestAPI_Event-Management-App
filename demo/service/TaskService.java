@@ -9,6 +9,7 @@ import event_management.demo.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,5 +67,10 @@ public class TaskService {
 
     public Page<Task> getTasksByUser(Long userId, Pageable pageable) {
         return taskRepository.findByAssignedToId(userId, pageable);
+    }
+
+    public List<Task> getTasksSorted(String field, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(field).ascending() : Sort.by(field).descending();
+        return taskRepository.findAll(sort);
     }
 }

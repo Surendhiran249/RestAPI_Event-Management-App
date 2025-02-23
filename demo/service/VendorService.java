@@ -5,6 +5,7 @@ import event_management.demo.repository.VendorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public class VendorService {
 
     public Vendor createVendor(Vendor vendor) {
         return vendorRepository.save(vendor);
+    }
+
+    public List<Vendor> saveVendors(List<Vendor> vendors) {
+        return vendorRepository.saveAll(vendors);
     }
 
     public List<Vendor> getAllVendors() {
@@ -45,5 +50,14 @@ public class VendorService {
 
     public Page<Vendor> getVendorsPaginated(Pageable pageable) {
         return vendorRepository.findAll(pageable);
+    }
+
+    public List<Vendor> getVendorsSorted(String field, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(field).ascending() : Sort.by(field).descending();
+        return vendorRepository.findAll(sort);
+    }
+
+    public List<Vendor> searchVendors(String keyword) {
+        return vendorRepository.searchVendors(keyword);
     }
 }

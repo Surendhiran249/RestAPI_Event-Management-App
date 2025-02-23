@@ -21,6 +21,11 @@ public class VendorController {
         return vendorService.createVendor(vendor);
     }
 
+    @PostMapping("/createbatch")
+    public List<Vendor> saveVendors(@RequestBody List<Vendor> vendors) {
+        return vendorService.saveVendors(vendors);
+    }
+
     @GetMapping
     public List<Vendor> getAllVendors() {
         return vendorService.getAllVendors();
@@ -50,5 +55,15 @@ public class VendorController {
     public Page<Vendor> getVendorsPaginated(@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "5")int size) {
         Pageable pageable = PageRequest.of(page,size);
         return vendorService.getVendorsPaginated(pageable);
+    }
+
+    @GetMapping("/sorted")
+    public List<Vendor> getVendorsSorted(@RequestParam String field, @RequestParam String direction) {
+        return vendorService.getVendorsSorted(field, direction);
+    }
+
+    @GetMapping("/search")
+    public List<Vendor> searchVendors(@RequestParam String keyword) {
+        return vendorService.searchVendors(keyword);
     }
 }

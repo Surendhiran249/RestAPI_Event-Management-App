@@ -35,8 +35,14 @@ public class EventController {
         return eventService.saveEvent(event);
     }
 
+    @PostMapping("/createbatch")
+    public List<Event> saveEvents(@RequestBody List<Event> events) {
+        return eventService.saveEvents(events);
+    }
+
+
     // Get All Events
-    @GetMapping
+    @GetMapping("/all")
     public List<Event> getAllEvents(){
         return eventService.getAllEvents();
     }
@@ -66,4 +72,13 @@ public class EventController {
         return eventService.getEventsPaginated(pageable);
     }
 
+    @GetMapping("/sorted")
+    public List<Event> getEventsSorted(@RequestParam String field, @RequestParam String direction) {
+        return eventService.getEventsSorted(field, direction);
+    }
+
+    @GetMapping("/search")
+    public List<Event> searchEvents(@RequestParam String keyword) {
+        return eventService.searchEvents(keyword);
+    }
 }

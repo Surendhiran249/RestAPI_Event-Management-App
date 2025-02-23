@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import event_management.demo.entity.User;
@@ -18,6 +19,11 @@ public class UserService {
     public User createUser(User user) {
         return userRepo.save(user);
     }
+
+    public List<User> saveUsers(List<User> users) {
+        return userRepo.saveAll(users);
+    }
+
 
     public List<User> getAllUsers() {
         return userRepo.findAll();
@@ -49,6 +55,15 @@ public class UserService {
 
     public Page<User> getUsersPaginated(Pageable pageable) {
         return userRepo.findAll(pageable);
+    }
+
+    public List<User> getUsersSorted(String field, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(field).ascending() : Sort.by(field).descending();
+        return userRepo.findAll(sort);
+    }
+
+    public List<User> searchUsers(String keyword) {
+        return userRepo.searchUsers(keyword);
     }
 
 }

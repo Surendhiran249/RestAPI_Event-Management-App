@@ -9,6 +9,7 @@ import event_management.demo.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,5 +76,10 @@ public class BookingService {
 
     public Page<Booking> getBookingsByEvent(Long eventId, Pageable pageable) {
         return bookingRepository.findByEventId(eventId, pageable);
+    }
+
+    public List<Booking> getBookingsSorted(String field, String direction) {
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(field).ascending() : Sort.by(field).descending();
+        return bookingRepository.findAll(sort);
     }
 }
