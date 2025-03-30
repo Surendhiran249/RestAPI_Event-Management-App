@@ -21,17 +21,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @RequestMapping("/events")
 public class EventController {
-    
+
     @Autowired
     private EventService eventService;
 
     // Create Event
     @PostMapping("/create")
-    public Event createEvent(@RequestBody Event event){
+    public Event createEvent(@RequestBody Event event) {
         return eventService.saveEvent(event);
     }
 
@@ -40,17 +39,18 @@ public class EventController {
         return eventService.saveEvents(events);
     }
 
-
     // Get All Events
     @GetMapping("/all")
-    public List<Event> getAllEvents(){
+    public List<Event> getAllEvents() {
         return eventService.getAllEvents();
     }
 
     // Get Event by ID
     @GetMapping("/{id}")
     public Event getEventById(@PathVariable Long id) {
-        return eventService.getEventById(id);
+        Event event = eventService.getEventById(id);
+        event.getTasks().forEach(task -> task.setEvent(null)); // Prevents circular reference issue
+        return event;
     }
 
     // Update Event
@@ -67,8 +67,9 @@ public class EventController {
 
     // Get all events paginated
     @GetMapping("/eventspage")
-    public Page<Event> getEventsPaginated(@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "5")int size) {
-        Pageable pageable = PageRequest.of(page,size);
+    public Page<Event> getEventsPaginated(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return eventService.getEventsPaginated(pageable);
     }
 

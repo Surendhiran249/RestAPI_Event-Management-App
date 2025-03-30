@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookingService {
@@ -26,18 +26,29 @@ public class BookingService {
     @Autowired
     private EventRepo eventRepository;
 
-    public Booking createBooking(Long userId, Long eventId) {
-        Optional<User> user = userRepository.findById(userId);
-        Optional<Event> event = eventRepository.findById(eventId);
+public Booking createBooking(Long userId, Long eventId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (user.isPresent() && event.isPresent()) {
-            Booking booking = new Booking();
-            booking.setUser(user.get());
-            booking.setEvent(event.get());
-            return bookingRepository.save(booking);
-        }
-        return null;
-    }
+    Event event = eventRepository.findById(eventId)
+        .orElseThrow(() -> new RuntimeException("Event not found"));
+
+    Booking booking = new Booking();
+    booking.setUser(user); // ✅ Explicitly set user
+    booking.setEvent(event); // ✅ Explicitly set event
+    booking.setBookingDate(LocalDateTime.now());
+    booking.setStatus("PENDING");
+
+    Booking savedBooking = bookingRepository.save(booking);
+
+    // ✅ Ensure user and event are loaded in response
+    savedBooking.getUser().getUsername();
+    savedBooking.getEvent().getName();
+
+    return savedBooking;
+}
+
+    
 
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();

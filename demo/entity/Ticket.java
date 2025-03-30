@@ -5,6 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 @Getter
 @Setter
@@ -18,6 +19,7 @@ public class Ticket {
 
     @OneToOne
     @JoinColumn(name = "booking_id", nullable = false)
+    @JsonBackReference
     private Booking booking;
 
     @Column(unique = true, nullable = false)

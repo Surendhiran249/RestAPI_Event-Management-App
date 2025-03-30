@@ -3,6 +3,8 @@ package event_management.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Getter
@@ -17,11 +19,17 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore // ✅ Prevents infinite loop but allows serialization in Booking response
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id", nullable = false)
+    @JsonIgnore // ✅ Prevents infinite loop but allows serialization in Booking response
     private Event event;
+
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Ticket ticket;
 
     @Column(nullable = false)
     private LocalDateTime bookingDate;

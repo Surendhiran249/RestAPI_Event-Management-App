@@ -28,7 +28,11 @@ public class BookingController {
 
     @GetMapping("/{id}")
     public Booking getBookingById(@PathVariable Long id) {
-        return bookingService.getBookingById(id);
+        Booking booking = bookingService.getBookingById(id);
+        if (booking.getTicket() != null) {
+            booking.getTicket().setBooking(null); // Prevent recursion issue
+        }
+        return booking;
     }
 
     @GetMapping("/user/{userId}")
@@ -42,9 +46,10 @@ public class BookingController {
     }
 
     @PutMapping("/update/{id}")
-    public Booking updateBooking(@PathVariable Long id, @RequestParam String status) {
+    public Booking updateBooking(@PathVariable Long id, @RequestParam(required = false) String status) {
         return bookingService.updateBooking(id, status);
     }
+    
 
     @DeleteMapping("/delete/{id}")
     public String deleteBooking(@PathVariable Long id) {
@@ -52,14 +57,16 @@ public class BookingController {
     }
 
     @GetMapping("/user/{userId}/bookingspage")
-    public Page<Booking> getBookingsByUser(@PathVariable Long userId,@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "5")int size) {
-        Pageable pageable = PageRequest.of(page,size);
+    public Page<Booking> getBookingsByUser(@PathVariable Long userId, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return bookingService.getBookingsByUser(userId, pageable);
     }
 
     @GetMapping("/event/{eventId}/bookingspage")
-    public Page<Booking> getBookingsByEvent(@PathVariable Long eventId,@RequestParam(defaultValue = "0")int page,@RequestParam(defaultValue = "5")int size) {
-        Pageable pageable = PageRequest.of(page,size);
+    public Page<Booking> getBookingsByEvent(@PathVariable Long eventId, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return bookingService.getBookingsByEvent(eventId, pageable);
     }
 

@@ -2,8 +2,9 @@ package event_management.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
@@ -27,6 +28,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "assigned_to", nullable = false)
+    @JsonIgnoreProperties("bookings")
     private User assignedTo;
 
     @Column(nullable = false)
@@ -40,6 +42,4 @@ public class Task {
         this.assignedDate = LocalDateTime.now();
         this.status = "PENDING";
     }
-
-    
 }
